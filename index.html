@@ -1,54 +1,165 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced CGPA Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+  <body>
+    <canvas id="bgCanvas"></canvas>
 
-<body>
+    <!-- Theme Toggle (Top Right) -->
+    <button class="mode-toggle" onclick="toggleMode()">🌙</button>
+
     <div class="container">
-        <div class="calculator">
-            <form onsubmit="return false;">
-                <div class="display">
-                    <input type="text" name="display" id="display" readonly>
-                </div>
-                <div>
-                    <input type="button" value="AC" class="operator" onclick="clearDisplay()">
-                    <input type="button" value="DE" onclick="deleteLast()">
-                    <input type="button" value="." class="operator" onclick="appendValue('.')">
-                    <input type="button" value="/" class="operator" onclick="appendValue('/')">
-                </div>
-                <div>
-                    <input type="button" value="7" onclick="appendValue('7')">
-                    <input type="button" value="8" onclick="appendValue('8')">
-                    <input type="button" value="9" onclick="appendValue('9')">
-                    <input type="button" value="*" class="operator" onclick="appendValue('*')">
-                </div>
-                <div>
-                    <input type="button" value="4" onclick="appendValue('4')">
-                    <input type="button" value="5" onclick="appendValue('5')">
-                    <input type="button" value="6" onclick="appendValue('6')">
-                    <input type="button" value="-" class="operator" onclick="appendValue('-')">
-                </div>
-                <div>
-                    <input type="button" value="3" onclick="appendValue('3')">
-                    <input type="button" value="2" onclick="appendValue('2')">
-                    <input type="button" value="1" onclick="appendValue('1')">
-                    <input type="button" value="+" class="operator" onclick="appendValue('+')">
-                </div>
-                <div>
-                    <input type="button" value="00" onclick="appendValue('00')">
-                    <input type="button" value="0" onclick="appendValue('0')">
-                    <input type="button" value="=" class="operator" onclick="calculate()">
-                </div>
-            </form>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+      <h1>🎓 Advanced CGPA Calculator</h1>
 
+      <!-- Name Input (Centered) -->
+      <div class="name-section">
+        <input type="text" id="studentName" placeholder="Enter Your Name" />
+      </div>
+
+      <table id="gradesTable">
+        <tr>
+          <th>Subject</th>
+          <th>Marks</th>
+          <th>Credit</th>
+          <th>Grade</th>
+          <th>GP</th>
+        </tr>
+        <tr>
+          <td>
+            <input type="" class="subject" placeholder="Enter Subject" />
+          </td>
+          <td><input type="number" min="0" max="100" class="marks" placeholder="Marks"  /></td>
+          <td><input type="number" min="1" max="5" class="credits" placeholder="Credits" /></td>
+          <td class="grade"></td>
+          <td class="gp"></td>
+        </tr>
+      </table>
+
+      <div class="btns">
+        <button onclick="addSubject()">➕ Add Subject</button>
+        <button onclick="removeSubject()">➖ Remove Subject</button>
+        <button onclick="calculateCGPA()">🎯 Calculate CGPA</button>
+      </div>
+
+      <div class="circle-section">
+        <button id="scaleBtn" onclick="toggleGradingScale()">
+          📘 Show Grading Scale
+        </button>
+
+        <div id="progressCircle">
+          <span id="progressValue">0.00</span>
+        </div>
+
+        <button onclick="toggleConverter()">🎯 Grade ↔ Marks</button>
+      </div>
+
+      <p id="result"></p>
+      <p id="remark"></p>
+
+      <div id="gradingScale" class="hidden">
+        <table>
+          <tr>
+            <th>Grade</th>
+            <th>Marks</th>
+            <th>GPA</th>
+          </tr>
+          <tr>
+            <td>A+</td>
+            <td>95-100</td>
+            <td>4.00</td>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td>86-94</td>
+            <td>4.00</td>
+          </tr>
+          <tr>
+            <td>A-</td>
+            <td>80-85</td>
+            <td>3.70</td>
+          </tr>
+          <tr>
+            <td>B+</td>
+            <td>76-79</td>
+            <td>3.30</td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>72-75</td>
+            <td>3.00</td>
+          </tr>
+          <tr>
+            <td>B-</td>
+            <td>68-71</td>
+            <td>2.70</td>
+          </tr>
+          <tr>
+            <td>C+</td>
+            <td>64-67</td>
+            <td>2.30</td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td>60-63</td>
+            <td>2.00</td>
+          </tr>
+          <tr>
+            <td>C-</td>
+            <td>57-59</td>
+            <td>1.70</td>
+          </tr>
+          <tr>
+            <td>D+</td>
+            <td>54-56</td>
+            <td>1.30</td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>50-53</td>
+            <td>1.00</td>
+          </tr>
+          <tr>
+            <td>F</td>
+            <td>Below 50</td>
+            <td>0.00</td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="converterModal" class="modal">
+        <div class="modal-content">
+          <h2 class="modal-title">🎯 Grade ↔ Marks Converter</h2>
+          <input
+            id="gradeInput"
+            type="text"
+            placeholder="Enter Grade (A, B+, etc)"
+          />
+          <input
+            id="marksInput"
+            type="number"
+            placeholder="Enter Marks (0-100)"
+          />
+          <p id="converterResult"></p>
+          <button onclick="toggleConverter()">Close</button>
+        </div>
+      </div>
+      <footer>
+        <p class="footer-text">
+          <p>Created by <span class="author">Fahad Baloch</span>
+        </p>
+      </footer>
+    </div>
+
+    <audio
+      id="clickSound"
+      src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_bbb57a32bb.mp3?filename=click-124467.mp3"
+    ></audio>
+    <script src="script.js"></script>
+  </body>
 </html>
